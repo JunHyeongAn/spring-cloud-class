@@ -9,5 +9,13 @@ public class RestfulWebServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RestfulWebServiceApplication.class, args);
 	}
-
+	
+	
+	
+//	@Bean
+//	public LocaleResolver localeResolver() {
+//		SessionLocaleResolver localeResolver = new SessionLocaleResolver();
+//		localeResolver.setDefaultLocale(Locale.KOREA);
+//		return localeResolver();
+//	}
 }
