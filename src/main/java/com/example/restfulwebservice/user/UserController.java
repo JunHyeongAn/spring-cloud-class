@@ -3,11 +3,15 @@ package com.example.restfulwebservice.user;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -25,15 +29,13 @@ public class UserController {
 	@GetMapping("/users/{id}")
 	public User retrieveUser(@PathVariable("id") int id) {
 		User user = service.findOne(id);
-		
-		if(user == null)
-			throw new UserNotFoundException(String.format("ID[%s] not found", id));
+		if(user == null) userNotFountExcption(id);
 		
 		return user;
 	}
 	
 	@PostMapping("/users")
-	public ResponseEntity<User> createUser(@RequestBody User user) {
+	public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
 		User savedUser = service.save(user);
 		
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -42,5 +44,24 @@ public class UserController {
 			.toUri();
 		
 		return ResponseEntity.created(location).build();
+	}
+	
+	@DeleteMapping("/users/{id}")
+	public void deleteUser(@PathVariable("id")int id) {
+		User user = service.deleteById(id);
+		
+		if(user == null) userNotFountExcption(id);
+	}
+	
+	@PutMapping("/users")
+	public void modifyUser(@RequestBody User user) {
+		User _user = service.findOne(user.getId());
+		if(_user == null) userNotFountExcption(user.getId());
+		user.setJoinDate(_user.getJoinDate());
+		service.modifyUser(user);
+	}
+	
+	public void userNotFountExcption(int id) {
+		throw new UserNotFoundException(String.format("ID[%s] not found", id));
 	}
 }
