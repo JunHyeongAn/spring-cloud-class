@@ -32,7 +32,8 @@ public class AdminController {
 		return mappingJacksonValue;
 	}
 	
-	@GetMapping("/v1/users/{id}")
+//	@GetMapping("/v1/users/{id}")
+	@GetMapping(value = "/users/{id}", params = "version=1")
 	public MappingJacksonValue retrieveUserV1(@PathVariable("id") int id) {
 		User user = service.findOne(id);
 		if(user == null) userNotFountExcption(id);
@@ -47,7 +48,8 @@ public class AdminController {
 		return mapping;
 	}
 	
-	@GetMapping("/v2/users/{id}")
+//	@GetMapping("/v2/users/{id}")
+	@GetMapping(value = "/users/{id}", params = "version=2")
 	public MappingJacksonValue retrieveUserV2(@PathVariable("id") int id) {
 		User user = service.findOne(id);
 		if(user == null) userNotFountExcption(id);
