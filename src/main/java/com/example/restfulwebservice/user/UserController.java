@@ -1,5 +1,6 @@
 package com.example.restfulwebservice.user;
 
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.List;
 
@@ -9,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.LinkRelation;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,8 +40,18 @@ public class UserController {
 		
 		// HATEOAS
 		EntityModel<User> model = EntityModel.of(user);
-		model.add(Link.of("/users", LinkRelation.of("user_list")));
+		WebMvcLinkBuilder linkTo = linkTo(
+				methodOn(this.getClass()).retrieveAllUsers());
 		
+		Link linkToUpdate = linkTo(
+					methodOn(this.getClass()).modifyUser(user)
+				).withRel("update-user");
+		
+		Link self = linkTo(methodOn(this.getClass()).retrieveUser(id)).withSelfRel();
+		
+		model.add(linkTo.withRel("all-users"));
+		model.add(linkToUpdate);
+		model.add(self);
 		return model;
 	}
 	
@@ -61,11 +75,12 @@ public class UserController {
 	}
 	
 	@PutMapping("/users")
-	public void modifyUser(@RequestBody User user) {
+	public User modifyUser(@RequestBody User user) {
 		User _user = service.findOne(user.getId());
 		if(_user == null) userNotFountExcption(user.getId());
 		user.setJoinDate(_user.getJoinDate());
 		service.modifyUser(user);
+		return _user;
 	}
 	
 	public void userNotFountExcption(int id) {
