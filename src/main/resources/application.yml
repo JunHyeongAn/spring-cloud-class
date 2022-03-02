@@ -10,8 +10,27 @@ spring:
    matching-strategy: 
     ANT_PATH_MATCHER
     
+ jpa:
+  show-sql: true
+  hibernate:
+   ddl-auto: create #테이블 드랍이나 업데이트등 설정 할 수 있음
+  defer-datasource-initialization: true
+  
+ h2:
+  console:
+   enabled: true
+ datasource:
+  url: jdbc:h2:mem:testdb
+
+# security:
+#  user:
+#   name: username
+#   password: passw0rd
+    
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+        
+        

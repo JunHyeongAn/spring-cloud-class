@@ -6,13 +6,15 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.restfulwebservice.post.Post;
+
 @Service
 public class UserDaoService {
 	private static List<User> users = new ArrayList<User>();
 	static {
-		users.add(new User(1, "kenneth", new Date(), "pass1", "ssn1"));
-		users.add(new User(2, "kenneth1", new Date(), "pass2", "ssn2"));
-		users.add(new User(3, "kenneth2", new Date(), "pass3", "ssn3"));
+		users.add(new User(1, "kenneth", new Date(), "pass1", "ssn1", new ArrayList<Post>()));
+		users.add(new User(2, "kenneth1", new Date(), "pass2", "ssn2", new ArrayList<Post>()));
+		users.add(new User(3, "kenneth2", new Date(), "pass3", "ssn3", new ArrayList<Post>()));
 	}
 	
 	private static int usersCount = users.size();
